@@ -3,8 +3,40 @@
 #include <getopt.h>
 #include <stdbool.h>
 
-int get_random_value() {
-    return rand() % 2;
+typedef struct Graph {
+    bool **matrix;
+    int nodes;
+    int edges;
+} Graph_t;
+
+Graph_t *init_incidence_graph(int nodes, int edges) {
+    Graph_t *graph = (Graph_t *) malloc(sizeof(Graph_t));
+    graph->nodes = nodes;
+    graph->edges = edges;
+    graph->matrix = (bool **) malloc(nodes * sizeof(bool *));
+    for (int i = 0; i < nodes; i++) {
+        graph->matrix[i] = (bool *) malloc(edges * sizeof(bool));
+    }
+    return graph;
+}
+
+// total_edges
+
+void gen_random_incidence_matrix(Graph_t *incidence_graph) {
+    int from, to;
+    for (int i = 0; i < incidence_graph->edges; i++) {
+        from = rand() % incidence_graph->nodes;
+        to = rand() % incidence_graph->nodes;
+        incidence_graph->matrix[from][to] = true;
+    }
+}
+
+void free_graph(Graph_t *graph) {
+    for (int i = 0; i < graph->nodes; i++) {
+        free(graph->matrix[i]);
+    }
+    free(graph->matrix);
+    free(graph);
 }
 
 int main(int argc, char **argv) {
@@ -33,6 +65,13 @@ int main(int argc, char **argv) {
                                 "[-a generate adjacency matrix] [-i generate incidence matrix]", argv[0]);
                 exit(EXIT_FAILURE);
         }
+    }
+    if (adjacency_flag) {
+        puts("");
+    }
+    if (incidence_flag) {
+        Graph_t *incidence_graph = init_incidence_graph(nodes, edges);
+        free(incidence_graph);
     }
     return EXIT_SUCCESS;
 }
