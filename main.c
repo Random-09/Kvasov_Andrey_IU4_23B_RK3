@@ -4,10 +4,15 @@
 
 
 int main(int argc, char **argv) {
-    Graph_t *graph = init_adjacency_graph(2, 4);
-    generate_random_adjacency_matrix(graph);
-    print_graph(graph);
-    free_graph(graph);
+    Graph_t *adjacency_graph = init_adjacency_graph(4, 3);
+    Graph_t *incidence_graph = init_incidence_graph(4, 3);
+    generate_adjacency_matrix(adjacency_graph);
+    print_graph(adjacency_graph);
+    puts("");
+    convert_to_incidence_matrix(adjacency_graph, incidence_graph);
+    print_incidence_graph(incidence_graph);
+    free_graph(adjacency_graph);
+    free_graph(incidence_graph);
 //    int opt;
 //    int nodes; // 2^64
 //    int edges; // 2^64
