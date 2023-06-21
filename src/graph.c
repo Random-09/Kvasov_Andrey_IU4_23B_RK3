@@ -65,11 +65,18 @@ void draw_graph(Graph_t *adj_graph) {
     fputs("digraph G {\n", dot_file_ptr);
     fputs("\tedge[dir=none]\n", dot_file_ptr);
     for (int i = 0; i < adj_graph->nodes; i++) {
-        for (int j = i; j < adj_graph->nodes; j++) {
+        bool is_connected = false;
+        for (int j = 0; j < adj_graph->nodes; j++) {
             int connections = adj_graph->matrix[i][j];
-            for (int k = 0; k < connections; k++)
-                fprintf(dot_file_ptr, "\t%d -> %d\n", i, j);
+            if (connections > 0)
+                is_connected = true;
+            if (j >= i) {
+                for (int k = 0; k < connections; k++)
+                    fprintf(dot_file_ptr, "\t%d -> %d\n", i, j);
+            }
         }
+        if (!is_connected)
+            fprintf(dot_file_ptr, "\t%d\n", i);
     }
     fputs("}", dot_file_ptr);
     fclose(dot_file_ptr);

@@ -4,8 +4,8 @@
 
 
 int main(int argc, char **argv) {
-    Graph_t *adjacency_graph = init_graph(4, 4, true);
-    Graph_t *incidence_graph = init_graph(4, 4, false);
+    Graph_t *adjacency_graph = init_graph(3, 7, true);
+    Graph_t *incidence_graph = init_graph(3, 7, false);
 
     generate_adjacency_matrix(adjacency_graph);
 
