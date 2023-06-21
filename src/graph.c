@@ -40,24 +40,42 @@ void convert_to_incidence_matrix(Graph_t *adjacency_graph, Graph_t *incidence_gr
     }
 }
 
-void graph_to_txt(Graph_t *graph, bool is_adjacency) {
-    if (is_adjacency) {
-        FILE *adj_matrix_file = fopen("../matrices/adjacency_matrix.txt", "w");
-        for (int i = 0; i < graph->nodes; i++) {
-            for (int j = 0; j < graph->nodes; j++)
-                fprintf(adj_matrix_file, "%d ", graph->matrix[i][j]);
-            fputs("\n", adj_matrix_file);
-        }
-        fclose(adj_matrix_file);
-    } else {
-        FILE *inc_matrix_file = fopen("../matrices/incidence_matrix.txt", "w");
-        for (int i = 0; i < graph->nodes; i++) {
-            for (int j = 0 ; j < graph->edges; j++)
-                fprintf(inc_matrix_file, "%d ", graph->matrix[i][j]);
-            fputs("\n", inc_matrix_file);
-        }
-        fclose(inc_matrix_file);
+void adj_graph_to_txt(Graph_t *adj_graph) {
+    FILE *adj_matrix_file_ptr = fopen("../matrices/adjacency_matrix.txt", "w");
+    for (int i = 0; i < adj_graph->nodes; i++) {
+        for (int j = 0; j < adj_graph->nodes; j++)
+            fprintf(adj_matrix_file_ptr, "%d ", adj_graph->matrix[i][j]);
+        fputs("\n", adj_matrix_file_ptr);
     }
+    fclose(adj_matrix_file_ptr);
+}
+
+void inc_graph_to_txt(Graph_t *inc_graph) {
+    FILE *inc_matrix_file_ptr = fopen("../matrices/incidence_matrix.txt", "w");
+    for (int i = 0; i < inc_graph->nodes; i++) {
+        for (int j = 0; j < inc_graph->edges; j++)
+            fprintf(inc_matrix_file_ptr, "%d ", inc_graph->matrix[i][j]);
+        fputs("\n", inc_matrix_file_ptr);
+    }
+    fclose(inc_matrix_file_ptr);
+}
+
+void draw_graph(Graph_t *adj_graph) {
+    FILE *dot_file_ptr = fopen(DOT_FILE_PATH, "w");
+    fputs("digraph G {\n", dot_file_ptr);
+    fputs("\tedge[dir=none]\n", dot_file_ptr);
+    for (int i = 0; i < adj_graph->nodes; i++) {
+        for (int j = i; j < adj_graph->nodes; j++) {
+            int connections = adj_graph->matrix[i][j];
+            for (int k = 0; k < connections; k++)
+                fprintf(dot_file_ptr, "\t%d -> %d\n", i, j);
+        }
+    }
+    fputs("}", dot_file_ptr);
+    fclose(dot_file_ptr);
+    char str[50];
+    sprintf(str, "dot -Tpng %s -o %s", DOT_FILE_PATH, PNG_FILE_PATH);
+    system(str);
 }
 
 void free_graph(Graph_t *graph) {

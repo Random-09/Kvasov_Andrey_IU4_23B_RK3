@@ -7,6 +7,9 @@
 #include <stdbool.h>
 #include <time.h>
 
+#define DOT_FILE_PATH "../dot/graph.dot"
+#define PNG_FILE_PATH "../pngs/graph.png"
+
 typedef struct Graph {
     int **matrix;
     int nodes;
@@ -23,7 +26,11 @@ void print_graph(Graph_t *adjacency_graph);
 
 void print_incidence_graph(Graph_t *incidence_graph);
 
-void graph_to_txt(Graph_t *graph, bool is_adjacency);
+void adj_graph_to_txt(Graph_t *adj_graph);
+
+void inc_graph_to_txt(Graph_t *inc_graph);
+
+void draw_graph(Graph_t *adj_graph);
 
 void free_graph(Graph_t *graph);
 

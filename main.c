@@ -4,16 +4,18 @@
 
 
 int main(int argc, char **argv) {
-    Graph_t *adjacency_graph = init_graph(4, 7, true);
-    Graph_t *incidence_graph = init_graph(4, 7, false);
+    Graph_t *adjacency_graph = init_graph(4, 4, true);
+    Graph_t *incidence_graph = init_graph(4, 4, false);
 
     generate_adjacency_matrix(adjacency_graph);
 
     puts("");
     convert_to_incidence_matrix(adjacency_graph, incidence_graph);
 
-    graph_to_txt(adjacency_graph, true);
-    graph_to_txt(incidence_graph, false);
+    adj_graph_to_txt(adjacency_graph);
+    inc_graph_to_txt(incidence_graph);
+
+    draw_graph(adjacency_graph);
 
     free_graph(adjacency_graph);
     free_graph(incidence_graph);
