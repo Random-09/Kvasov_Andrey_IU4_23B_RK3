@@ -1,56 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "include/graph.h"
 
-
 int main(int argc, char **argv) {
-    Graph_t *adjacency_graph = init_graph(3, 7, true);
-    Graph_t *incidence_graph = init_graph(3, 7, false);
-
-    generate_adjacency_matrix(adjacency_graph);
-
-    puts("");
-    convert_to_incidence_matrix(adjacency_graph, incidence_graph);
-
-    adj_graph_to_txt(adjacency_graph);
-    inc_graph_to_txt(incidence_graph);
-
-    draw_graph(adjacency_graph);
-
-    free_graph(adjacency_graph);
-    free_graph(incidence_graph);
-//    int opt;
-//    int nodes; // 2^64
-//    int edges; // 2^64
-//    bool adjacency_flag = false;
-//    bool incidence_flag = false;
-//    while ((opt = getopt(argc, argv, "n:e:ai")) != -1) {
-//        switch (opt) { //Ключи количества узлов и ребер обязательные,
-//                       //ключи матриц можно задать либо одну, либо обе. Сделать проверки на это.
-//            case 'n':
-//                nodes = atoi(optarg);
-//                break;
-//            case 'e':
-//                edges = atoi(optarg);
-//                break;
-//            case 'a':
-//                adjacency_flag = true;
-//                break;
-//            case 'i':
-//                incidence_flag = true;
-//                break;
-//            default:
-//                fprintf(stderr, "Usage: %s [-n: number of nodes] [-e: number of edges]"
-//                                "[-a generate adjacency matrix] [-i generate incidence matrix]", argv[0]);
-//                exit(EXIT_FAILURE);
-//        }
-//    }
-//    if (adjacency_flag) {
-//        puts("");
-//    }
-//    if (incidence_flag) {
-//        Graph_t *adjacency_graph = init_adjacency_graph(nodes, edges);
-//        free(adjacency_graph);
-//    }
+    int opt;
+    uint64_t nodes;
+    uint64_t edges;
+    bool nodes_entered = false;
+    bool edges_entered = false;
+    bool create_adjacency = false;
+    bool create_incidence = false;
+    while ((opt = getopt(argc, argv, "n:e:ai")) != -1) {
+        switch (opt) {
+            case 'n':
+                nodes = strtoull(optarg, NULL, 10);
+                if (nodes == -1) {
+                    puts("Too many nodes!");
+                    exit(EXIT_FAILURE);
+                }
+                nodes_entered = true;
+                break;
+            case 'e':
+                edges = strtoull(optarg, NULL, 10);
+                if (edges == -1) {
+                    puts("Too many edges!");
+                    exit(EXIT_FAILURE);
+                }
+                edges_entered = true;
+                break;
+            case 'a':
+                create_adjacency = true;
+                break;
+            case 'i':
+                create_incidence = true;
+                break;
+            default:
+                fprintf(stderr, "Usage: %s [-n: number of nodes] [-e: number of edges]"
+                                "[-a generate adjacency matrix] [-i generate incidence matrix]", argv[0]);
+                exit(EXIT_FAILURE);
+        }
+    }
+    if (!nodes_entered || !edges_entered) {
+        puts("You must enter edges and nodes arguments!");
+        exit(EXIT_FAILURE);
+    }
+    if (!create_adjacency && !create_incidence) {
+        puts("You should choose at least one matrix!");
+        exit(EXIT_FAILURE);
+    }
+    Graph_t *adj_graph = init_graph(nodes, edges, true);
+    generate_random_adj_matrix(adj_graph);
+    if (create_adjacency) {
+        adj_graph_to_txt(adj_graph);
+    }
+    if (create_incidence) {
+        Graph_t *inc_graph = init_graph(nodes, edges, false);
+        convert_adj_to_inc(adj_graph, inc_graph);
+        inc_graph_to_txt(inc_graph);
+        free_graph(inc_graph);
+    }
+    draw_graph(adj_graph);
+    free_graph(adj_graph);
     return EXIT_SUCCESS;
 }
+
+

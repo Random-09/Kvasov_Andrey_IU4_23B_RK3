@@ -1,6 +1,6 @@
 #include "../include/graph.h"
 
-Graph_t *init_graph(int nodes, int edges, bool is_adjacency) {
+Graph_t *init_graph(uint64_t nodes, uint64_t edges, bool is_adjacency) {
     Graph_t *graph = (Graph_t *) malloc(sizeof(Graph_t));
     graph->nodes = nodes;
     graph->edges = edges;
@@ -14,7 +14,7 @@ Graph_t *init_graph(int nodes, int edges, bool is_adjacency) {
     return graph;
 }
 
-void generate_adjacency_matrix(Graph_t *adjacency_graph) {
+void generate_random_adj_matrix(Graph_t *adjacency_graph) {
     srand(time(NULL));
     int from, to;
     for (int i = 0; i < adjacency_graph->edges; ++i) {
@@ -26,7 +26,7 @@ void generate_adjacency_matrix(Graph_t *adjacency_graph) {
     }
 }
 
-void convert_to_incidence_matrix(Graph_t *adjacency_graph, Graph_t *incidence_graph) {
+void convert_adj_to_inc(Graph_t *adjacency_graph, Graph_t *incidence_graph) {
     int col = 0;
     for (int i = 0; i < adjacency_graph->nodes; i++) {
         for (int j = i; j < adjacency_graph->nodes; j++) {
@@ -41,7 +41,7 @@ void convert_to_incidence_matrix(Graph_t *adjacency_graph, Graph_t *incidence_gr
 }
 
 void adj_graph_to_txt(Graph_t *adj_graph) {
-    FILE *adj_matrix_file_ptr = fopen("../matrices/adjacency_matrix.txt", "w");
+    FILE *adj_matrix_file_ptr = fopen(ADJ_MATRIX_PATH, "w");
     for (int i = 0; i < adj_graph->nodes; i++) {
         for (int j = 0; j < adj_graph->nodes; j++)
             fprintf(adj_matrix_file_ptr, "%d ", adj_graph->matrix[i][j]);
@@ -51,7 +51,7 @@ void adj_graph_to_txt(Graph_t *adj_graph) {
 }
 
 void inc_graph_to_txt(Graph_t *inc_graph) {
-    FILE *inc_matrix_file_ptr = fopen("../matrices/incidence_matrix.txt", "w");
+    FILE *inc_matrix_file_ptr = fopen(INC_MATRIX_PATH, "w");
     for (int i = 0; i < inc_graph->nodes; i++) {
         for (int j = 0; j < inc_graph->edges; j++)
             fprintf(inc_matrix_file_ptr, "%d ", inc_graph->matrix[i][j]);
