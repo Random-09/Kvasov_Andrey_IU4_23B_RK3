@@ -1,2 +1,1 @@
-
-###Informatics semester2 RK3
+Informatics semester2 RK3
