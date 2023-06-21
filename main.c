@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
             case 'n':
                 nodes = strtoull(optarg, NULL, 10);
                 if (nodes == -1) {
-                    puts("Too many nodes!");
+                    puts("Too many nodes! Or error in converting to int!");
                     exit(EXIT_FAILURE);
                 }
                 nodes_entered = true;
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
             case 'e':
                 edges = strtoull(optarg, NULL, 10);
                 if (edges == -1) {
-                    puts("Too many edges!");
+                    puts("Too many edges! Or error in converting to int!");
                     exit(EXIT_FAILURE);
                 }
                 edges_entered = true;
